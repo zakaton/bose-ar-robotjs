@@ -1,0 +1,381 @@
+<html>
+    <head>
+        <script src="bose-ar-web-sdk.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    </head>
+
+    <style>
+        input {
+            width: 50px
+        }
+    </style>
+
+    <body>
+        <bose-ar-device></bose-ar-device>
+        
+        <div id=dataContainer style="display: none ">
+
+            <h1>Bose Frames</h1>
+
+            <h2>Sensor Data</h2>
+
+            <form id=accelerometerContainer>
+                <h3>Accelerometer</h3>
+
+                <select size="6" style="overflow: hidden" oninput="boseARDeviceElement.setAttribute('accelerometer', this.value)">
+                    <option selected value=0>disabled</option>
+                    <option value=20>very fast (20ms)</option>
+                    <option value=40>fast (40ms)</option>
+                    <option value=80>normal (80ms)</option>
+                    <option value=160>slow (160ms)</option>
+                    <option value=320>very slow (320ms)</option>
+                </select>
+
+                <br>
+                <br>
+
+                <label for=accelerometerX>x</label>
+                <input id=accelerometerX readonly>
+
+                <label for=accelerometerY>y</label>
+                <input id=accelerometerY readonly size=2>
+
+                <label for=accelerometerZ>z</label>
+                <input id=accelerometerZ readonly size=2>
+
+                <br>
+                <br>
+
+                <label for=accelerometerTimestamp>timestamp</label>
+                <input id=accelerometerTimestamp readonly size=2>
+
+            </form>
+
+            <form id="Gyroscope">
+                <h3>Gyroscope</h3>
+                <select size="6" style="overflow: hidden" oninput="boseARDeviceElement.setAttribute('gyroscope', this.value)">
+                    <option selected value=0>disabled</option>
+                    <option value=20>very fast (20ms)</option>
+                    <option value=40>fast (40ms)</option>
+                    <option value=80>normal (80ms)</option>
+                    <option value=160>slow (160ms)</option>
+                    <option value=320>very slow (320ms)</option>
+                </select>
+
+                <br>
+                <br>
+
+                <label for=gyroscopeX>x</label>
+                <input id=gyroscopeX readonly size=2>
+
+                <label for=gyroscopeY>y</label>
+                <input id=gyroscopeY readonly size=2>
+
+                <label for=gyroscopeZ>z</label>
+                <input id=gyroscopeZ readonly size=2>
+
+                <br>
+                <br>
+
+                <label for=gyroscopeTimestamp>timestamp</label>
+                <input id=gyroscopeTimestamp size=2>
+            </form>
+
+            <form id="Rotation">
+                <h3>Rotation</h3>
+                <select size="6" style="overflow: hidden" oninput="boseARDeviceElement.setAttribute('rotation', this.value)">
+                    <option selected value=0>disabled</option>
+                    <option value=20>very fast (20ms)</option>
+                    <option value=40>fast (40ms)</option>
+                    <option value=80>normal (80ms)</option>
+                    <option value=160>slow (160ms)</option>
+                    <option value=320>very slow (320ms)</option>
+                </select>
+
+                <br>
+                <br>
+
+                <label for=rotationX>x</label>
+                <input id=rotationX readonly size=2>
+
+                <label for=rotationY>y</label>
+                <input id=rotationY readonly size=2>
+
+                <label for=rotationZ>z</label>
+                <input id=rotationZ readonly size=2>
+
+                <label for=rotationW>w</label>
+                <input id=rotationW readonly size=2>
+
+                <br>
+                <br>
+
+                <label for=rotationPitch>pitch</label>
+                <input id=rotationPitch readonly size=2>
+
+                <label for=rotationRoll>roll</label>
+                <input id=rotationRoll readonly size=2>
+
+                <label for=rotationYaw>yaw</label>
+                <input id=rotationYaw readonly size=2>
+
+                <br>
+                <br>
+
+                <label for=rotationTimestamp>timestamp</label>
+                <input id=rotationTimestamp readonly size=2>
+            </form>
+
+            
+            <form id="Game Rotation">
+                <h3>Game Rotation</h3>
+                <select size="6" style="overflow: hidden" oninput="boseARDeviceElement.setAttribute('game-rotation', this.value)">
+                    <option selected value=0>disabled</option>
+                    <option value=20>very fast (20ms)</option>
+                    <option value=40>fast (40ms)</option>
+                    <option value=80>normal (80ms)</option>
+                    <option value=160>slow (160ms)</option>
+                    <option value=320>very slow (320ms)</option>
+                </select>
+
+                <br>
+                <br>
+
+                <label for=gameRotationX>x</label>
+                <input id=gameRotationX readonly size=2>
+
+                <label for=gameRotationY>y</label>
+                <input id=gameRotationY readonly size=2>
+
+                <label for=gameRotationZ>z</label>
+                <input id=gameRotationZ readonly size=2>
+
+                <label for=gameRotationW>w</label>
+                <input id=gameRotationW readonly size=2>
+
+                <br>
+                <br>
+
+                <label for=gameRotationPitch>pitch</label>
+                <input id=gameRotationPitch readonly size=2>
+
+                <label for=gameRotationRoll>roll</label>
+                <input id=gameRotationRoll readonly size=2>
+
+                <label for=gameRotationYaw>yaw</label>
+                <input id=gameRotationYaw readonly size=2>
+
+                <br>
+                <br>
+
+                <label for=gameRotationTimestamp>timestamp</label>
+                <input id=gameRotationTimestamp readonly size=2>
+            </form>
+
+            <hr>
+
+            <h2>Gesture Data</h2>
+
+            <form id="SingleTap">
+                <h3>Single Tap (Waiting for a firmware update from Bose)</h3>
+
+                <select disabled size="2" style="overflow: hidden" oninput="(this.value == 'enable')? boseARDeviceElement.setAttribute('single-tap', ''):boseARDeviceElement.removeAttribute('single-tap')">
+                    <option selected value=disable>disable</option>
+                    <option value=enable>enable</option>
+                </select>
+
+                <br>
+                
+                <div id=singleTapNotifications style="width: 500px; border: solid">
+
+                </div>  
+            </form>
+
+            <form id="DoubleTap">
+                <h3>Double Tap</h3>
+
+                <select size="2" style="overflow: hidden" oninput="(this.value == 'enable')? boseARDeviceElement.setAttribute('double-tap', ''):boseARDeviceElement.removeAttribute('double-tap')">
+                    <option selected value=disable>disable</option>
+                    <option value=enable>enable</option>
+                </select>
+
+                <br>
+                
+                <div id=doubleTapNotifications style="width: 500px; border: solid">
+
+                </div>  
+            </form>
+
+            <form id="HeadNod">
+                <h3>Head Nod</h3>
+
+                <select size="2" style="overflow: hidden" oninput="(this.value == 'enable')? boseARDeviceElement.setAttribute('head-nod', ''):boseARDeviceElement.removeAttribute('head-nod')">
+                    <option selected value=disable>disable</option>
+                    <option value=enable>enable</option>
+                </select>
+
+                <br>
+                
+                <div id=headNodNotifications style="width: 500px; border: solid">
+
+                </div>  
+            </form>
+
+            <form id="HeadShake">
+                <h3>Head Shake</h3>
+
+                <select size="2" style="overflow: hidden" oninput="(this.value == 'enable')? boseARDeviceElement.setAttribute('head-shake', ''):boseARDeviceElement.removeAttribute('head-shake')">
+                    <option selected value=disable>disable</option>
+                    <option value=enable>enable</option>
+                </select>
+
+                <br>
+                
+                <div id=headShakeNotifications style="width: 500px; border: solid">
+
+                </div>  
+            </form>
+        </div>
+
+        <script>
+            const boseARDeviceElement = document.querySelector("bose-ar-device");
+
+            boseARDeviceElement.addEventListener("connect", event => {
+                dataContainer.style.display = '';
+            });
+
+            boseARDeviceElement.addEventListener("accelerometer", event => {
+                accelerometerX.value = Number(boseARDeviceElement.getAttribute("accelerometerX")).toFixed(3);
+                accelerometerY.value = Number(boseARDeviceElement.getAttribute("accelerometerY")).toFixed(3);
+                accelerometerZ.value = Number(boseARDeviceElement.getAttribute("accelerometerZ")).toFixed(3);
+
+                accelerometerTimestamp.value = boseARDeviceElement.getAttribute("accelerometerTimestamp");
+            });
+            boseARDeviceElement.addEventListener("gyroscope", event => {
+                gyroscopeX.value = Number(boseARDeviceElement.getAttribute("gyroscopeX")).toFixed(3);
+                gyroscopeY.value = Number(boseARDeviceElement.getAttribute("gyroscopeY")).toFixed(3);
+                gyroscopeZ.value = Number(boseARDeviceElement.getAttribute("gyroscopeZ")).toFixed(3);
+
+                gyroscopeTimestamp.value = boseARDeviceElement.getAttribute("gyroscopeTimestamp");
+            });
+            boseARDeviceElement.addEventListener("rotation", event => {
+                rotationX.value = Number(boseARDeviceElement.getAttribute("rotationX")).toFixed(3);
+                rotationY.value = Number(boseARDeviceElement.getAttribute("rotationY")).toFixed(3);
+                rotationZ.value = Number(boseARDeviceElement.getAttribute("rotationZ")).toFixed(3);                
+                
+                rotationW.value = Number(boseARDeviceElement.getAttribute("rotationW")).toFixed(3);
+
+                rotationPitch.value = Number(boseARDeviceElement.getAttribute("rotationPitch")).toFixed(3);
+                rotationRoll.value = Number(boseARDeviceElement.getAttribute("rotationRoll")).toFixed(3);
+                rotationYaw.value = Number(boseARDeviceElement.getAttribute("rotationYaw")).toFixed(3);
+
+                rotationTimestamp.value = boseARDeviceElement.getAttribute("rotationTimestamp");
+            });
+            boseARDeviceElement.addEventListener("gameRotation", event => {
+                gameRotationX.value = Number(boseARDeviceElement.getAttribute("gameRotationX")).toFixed(3);
+                gameRotationY.value = Number(boseARDeviceElement.getAttribute("gameRotationY")).toFixed(3);
+                gameRotationZ.value = Number(boseARDeviceElement.getAttribute("gameRotationZ")).toFixed(3);                
+                
+                gameRotationW.value = Number(boseARDeviceElement.getAttribute("gameRotationW")).toFixed(3);
+
+                gameRotationPitch.value = Number(boseARDeviceElement.getAttribute("gameRotationPitch")).toFixed(3);
+                gameRotationRoll.value = Number(boseARDeviceElement.getAttribute("gameRotationRoll")).toFixed(3);
+                gameRotationYaw.value = Number(boseARDeviceElement.getAttribute("gameRotationYaw")).toFixed(3);
+
+                gameRotationTimestamp.value = boseARDeviceElement.getAttribute("gameRotationTimestamp");
+            });
+
+            boseARDeviceElement.addEventListener("singleTap", event => {
+                singleTapNotifications.innerText +=
+                    "Gesture Type: " + "Single Tap" +
+                    "\nTimestamp: " + boseARDeviceElement.getAttribute("singleTapTimestamp") + '\n\n';
+            });
+            boseARDeviceElement.addEventListener("doubleTap", event => {
+                doubleTapNotifications.innerText +=
+                    "Gesture Type: " + "Double Tap" +
+                    "\nTimestamp: " + boseARDeviceElement.getAttribute("doubleTapTimestamp") + '\n\n';
+            });
+            boseARDeviceElement.addEventListener("headNod", event => {
+                headNodNotifications.innerText +=
+                    "Gesture Type: " + "Head Nod" +
+                    "\nTimestamp: " + boseARDeviceElement.getAttribute("headNodTimestamp") + '\n\n';
+            });
+            boseARDeviceElement.addEventListener("headShake", event => {
+                headShakeNotifications.innerText +=
+                    "Gesture Type: " + "Head Shake" +
+                    "\nTimestamp: " + boseARDeviceElement.getAttribute("headShakeTimestamp") + '\n\n';
+            });
+        </script>
+
+        <script>
+            const socket = io(':3000');
+            socket.on('connect', () => {
+                boseARDeviceElement.addEventListener("accelerometer", event => {
+                    socket.emit('accelerometer', {
+                        x : Number(boseARDeviceElement.getAttribute("accelerometerX")),
+                        y : Number(boseARDeviceElement.getAttribute("accelerometerY")),
+                        z : Number(boseARDeviceElement.getAttribute("accelerometerZ")),
+                        timestamp : Number(boseARDeviceElement.getAttribute("accelerometerTimestamp"))
+                    });
+                });
+                boseARDeviceElement.addEventListener("gyroscope", event => {
+                    socket.emit('gyroscope', {
+                        x : Number(boseARDeviceElement.getAttribute("gyroscopeX")),
+                        y : Number(boseARDeviceElement.getAttribute("gyroscopeY")),
+                        z : Number(boseARDeviceElement.getAttribute("gyroscopeZ")),
+                        timestamp : Number(boseARDeviceElement.getAttribute("gyroscopeTimestamp"))
+                    });
+                });
+                boseARDeviceElement.addEventListener("rotation", event => {
+                    socket.emit('rotation', {
+                        x : Number(boseARDeviceElement.getAttribute("rotationX")),
+                        y : Number(boseARDeviceElement.getAttribute("rotationY")),
+                        z : Number(boseARDeviceElement.getAttribute("rotationZ")),
+                        w : Number(boseARDeviceElement.getAttribute("rotationW")),
+                        
+                        pitch : Number(boseARDeviceElement.getAttribute("rotationPitch")),
+                        roll : Number(boseARDeviceElement.getAttribute("rotationRoll")),
+                        yaw : Number(boseARDeviceElement.getAttribute("rotationYaw")),
+                        
+                        timestamp : Number(boseARDeviceElement.getAttribute("rotationTimestamp")),
+                    });
+                });
+                boseARDeviceElement.addEventListener("gameRotation", event => {
+                    socket.emit('gameRotation', {
+                        x : Number(boseARDeviceElement.getAttribute("gameRotationX")),
+                        y : Number(boseARDeviceElement.getAttribute("gameRotationY")),
+                        z : Number(boseARDeviceElement.getAttribute("gameRotationZ")),
+                        w : Number(boseARDeviceElement.getAttribute("gameRotationW")),
+                        
+                        pitch : Number(boseARDeviceElement.getAttribute("gameRotationPitch")),
+                        roll : Number(boseARDeviceElement.getAttribute("gameRotationRoll")),
+                        yaw : Number(boseARDeviceElement.getAttribute("gameRotationYaw")),
+                        
+                        timestamp : Number(boseARDeviceElement.getAttribute("gameRotationTimestamp"))
+                    });
+                });
+    
+                boseARDeviceElement.addEventListener("singleTap", event => {
+                    socket.emit('singleTap', {
+                        timestamp : Number(boseARDeviceElement.getAttribute("singleTapTimestamp")),
+                    });
+                });
+                boseARDeviceElement.addEventListener("doubleTap", event => {
+                    socket.emit('doubleTap', {
+                        timestamp : Number(boseARDeviceElement.getAttribute("doubleTapTimestamp")),
+                    });
+                });
+                boseARDeviceElement.addEventListener("headNod", event => {
+                    socket.emit('headNod', {
+                        timestamp : Number(boseARDeviceElement.getAttribute("headNodTimestamp")),
+                    });
+                });
+                boseARDeviceElement.addEventListener("headShake", event => {
+                    socket.emit('headShake', {
+                        timestamp : Number(boseARDeviceElement.getAttribute("headShakeTimestamp")),
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>

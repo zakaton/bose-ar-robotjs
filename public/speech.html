@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <title>Speech</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    </head>
+
+    <body>
+        <h1>Speech</h1>
+    </body>
+
+    <script>
+        const socket = io(':3000');
+    </script>
+
+    <script>
+        const phrases = [
+            'click', 'double-click', 'right click',
+
+            'mouse down', 'mouse up',
+
+            'scroll', 'mouse',
+
+            'undo', 'redo',
+
+            'recalibrate',
+
+            'enable', 'disabled',
+        ];
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList;
+        const SpeechRecognitionEvent = window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent;
+
+        const grammar = `#JSGF V1.0; grammar phrases; public <phrase> =  ${phrases.join(' | ')} ;`;
+        const speechRecognition  = new SpeechRecognition();
+        const speechRecognitionList = new SpeechGrammarList();
+        speechRecognitionList.addFromString(grammar, 1);
+        speechRecognition.grammars = speechRecognitionList;
+        speechRecognition.lang = 'en-US';
+        speechRecognition.interimResults = false;
+        speechRecognition.maxAlternatives = 1;
+        speechRecognition.continuous = true;
+
+        speechRecognition.start();
+
+        speechRecognition.onresult = (event) => {
+            let result = event.results[event.results.length-1][0].transcript.toLowerCase();
+            
+            if(result[0] == ' ')
+                result = result.substr(1);
+
+            if(phrases.includes(result)) {
+                console.log(result);
+                socket.emit(result);
+            }
+            else
+                console.log(`unknown phrase "${result}"`);
+        }
+
+        speechRecognition.onend = () => speechRecognition.start();
+    </script>
+</html>
